@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tabata/domain/text_to_time/get_time_from_text_use_case.dart';
 import 'package:tabata/domain/time_to_text/get_text_from_time_use_case.dart';
+import 'package:tabata/domain/total_time/get_total_time_use_case.dart';
 import 'package:tabata/presentation/components/bars/close_title_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:tabata/presentation/components/bottom_sheets/alert_bottom_sheet.dart';
 import 'package:tabata/presentation/components/bottom_sheets/time_bottom_sheet.dart';
 import 'package:tabata/presentation/components/bottom_sheets/value_bottom_sheet.dart';
+import 'package:tabata/presentation/components/buttons/primary_button.dart';
 import 'package:tabata/presentation/components/fields/settings_field/setting_field.dart';
 import 'package:tabata/presentation/components/fields/settings_field/setting_field_state.dart';
 import 'package:tabata/utils/asset_load.dart';
 import 'package:tabata/utils/dimens.dart';
+import 'package:tabata/utils/text_styles.dart';
 
 class SettingsWidget extends StatefulWidget {
-  const SettingsWidget({super.key});
+  final GetTotalTimeUseCase getTotalTimeUseCase;
+
+  const SettingsWidget({
+    required this.getTotalTimeUseCase,
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() => _SettingsWidgetState();
@@ -45,7 +55,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           CloseTitleBar(
             title: "settings".tr(),
             closeCallback: () {
-              Navigator.pop(context);
+              _closeSetup();
             },
           ),
           const SizedBox(height: 24),
@@ -56,55 +66,81 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   }
 
   Widget _buildContent() {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: Dimens.horizontal,
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimens.horizontal,
+        ),
+        child: Column(children: [
+          _buildHeaderInfo(),
+          const SizedBox(height: 16),
+          SettingField(
+            iconName: IconsAsset.named("tempo_serie"),
+            title: "series_time".tr(),
+            value: _seriesTimeController.text,
+            onPressed: _editSeriesTime,
+          ),
+          const SizedBox(height: 8),
+          SettingField(
+            iconName: IconsAsset.named("serie"),
+            title: "series_quantity".tr(),
+            value: _seriesQuantityController.text,
+            onPressed: _editSeriesQuantity,
+          ),
+          const SizedBox(height: 8),
+          SettingField(
+            iconName: IconsAsset.named("tempo_descanso"),
+            title: "rest_time".tr(),
+            value: _restTimeController.text,
+            onPressed: _editRestTime,
+          ),
+          const SizedBox(height: 8),
+          SettingField(
+            iconName: IconsAsset.named("ciclos"),
+            title: "cycles_quantity".tr(),
+            value: _cyclesQuantityController.text,
+            onPressed: _editCylesQuantity,
+          ),
+          const SizedBox(height: 8),
+          SettingField(
+            iconName: IconsAsset.named("intervalo"),
+            title: "time_between_cicles".tr(),
+            value: _timeBetweenCyclesController.text,
+            onPressed: _editTimeBetweenCycles,
+            state: timeBetweenCyclesFieldState(),
+          ),
+          const SizedBox(height: 8),
+          SettingField(
+            iconName: IconsAsset.named("total"),
+            title: "total_time".tr(),
+            value: _totalTime(),
+            onPressed: () {},
+            state: SettingsFieldState.nonEditable,
+          ),
+          const Spacer(),
+          PrimaryButton(
+            title: "next".tr(),
+            onPressed: _saveSettings,
+          ),
+          const SizedBox(height: 44),
+        ]),
       ),
-      child: Column(children: [
-        SettingField(
-          iconName: IconsAsset.named("tempo_serie"),
-          title: "series_time".tr(),
-          value: _seriesTimeController.text,
-          onPressed: _editSeriesTime,
+    );
+  }
+
+  Widget _buildHeaderInfo() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SvgPicture.asset(IconsAsset.named("info")),
+        const SizedBox(
+          width: 10,
         ),
-        const SizedBox(height: 8),
-        SettingField(
-          iconName: IconsAsset.named("serie"),
-          title: "series_quantity".tr(),
-          value: _seriesQuantityController.text,
-          onPressed: _editSeriesQuantity,
-        ),
-        const SizedBox(height: 8),
-        SettingField(
-          iconName: IconsAsset.named("tempo_descanso"),
-          title: "rest_time".tr(),
-          value: _restTimeController.text,
-          onPressed: _editRestTime,
-        ),
-        const SizedBox(height: 8),
-        SettingField(
-          iconName: IconsAsset.named("ciclos"),
-          title: "cycles_quantity".tr(),
-          value: _cyclesQuantityController.text,
-          onPressed: _editCylesQuantity,
-        ),
-        const SizedBox(height: 8),
-        SettingField(
-          iconName: IconsAsset.named("intervalo"),
-          title: "time_between_cicles".tr(),
-          value: _timeBetweenCyclesController.text,
-          onPressed: _editTimeBetweenCycles,
-          state: timeBetweenCyclesFieldState(),
-        ),
-        const SizedBox(height: 8),
-        SettingField(
-          iconName: IconsAsset.named("total"),
-          title: "total_time".tr(),
-          value: _totalTime(),
-          onPressed: () {},
-          state: SettingsFieldState.nonEditable,
+        Text(
+          "settings_header_title".tr(),
+          style: TextStyles.titleWithSize(size: 16),
         )
-      ]),
+      ],
     );
   }
 
@@ -207,6 +243,29 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   }
 
   String _totalTime() {
-    return "04:00";
+    return widget.getTotalTimeUseCase.execute(
+      _seriesTimeController.text,
+      _seriesQuantityController.text,
+      _restTimeController.text,
+      _cyclesQuantityController.text,
+      _timeBetweenCyclesController.text,
+    );
   }
+
+  _closeSetup() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return AlertBottomSheet(
+          title: "cancel_confirm_title".tr(),
+          subtitle: "cancel_confirm_subtitle".tr(),
+          mainButtonTitle: "leave".tr(),
+          secondaryButtonTitle: "back".tr(),
+          confirmation: () {},
+        );
+      },
+    );
+  }
+
+  _saveSettings() {}
 }

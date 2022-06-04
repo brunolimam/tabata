@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_it/get_it.dart';
+import 'package:tabata/domain/total_time/get_total_time_use_case.dart';
+import 'package:tabata/domain/total_time/get_total_time_use_case_impl.dart';
 import 'package:tabata/presentation/components/bottom_sheets/alert_bottom_sheet.dart';
 import 'package:tabata/presentation/components/buttons/primary_button.dart';
 import 'package:tabata/presentation/settings/settings_widget.dart';
@@ -12,7 +15,9 @@ import 'package:tabata/utils/text_sizes.dart';
 import 'package:tabata/utils/text_styles.dart';
 
 class FirstSetupWidget extends StatefulWidget {
-  const FirstSetupWidget({super.key});
+  final GetIt _getIt = GetIt.instance;
+
+  FirstSetupWidget({super.key});
 
   @override
   State<StatefulWidget> createState() => _FirstSetupWidgetState();
@@ -77,7 +82,7 @@ class _FirstSetupWidgetState extends State<FirstSetupWidget> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 44),
             PrimaryButton(
               title: "create_tabata".tr(),
               onPressed: _createTabata,
@@ -104,6 +109,10 @@ class _FirstSetupWidgetState extends State<FirstSetupWidget> {
   }
 
   _createTabata() {
-    NavigatorUtils.navigate(context, const SettingsWidget());
+    NavigatorUtils.navigate(
+        context,
+        SettingsWidget(
+          getTotalTimeUseCase: widget._getIt.get<GetTotalTimeUseCase>(),
+        ));
   }
 }

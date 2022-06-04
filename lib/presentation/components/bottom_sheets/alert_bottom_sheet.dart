@@ -33,7 +33,7 @@ class AlertBottomSheet extends StatelessWidget {
           children: [
             const SizedBox(height: 34),
             SvgPicture.asset(ImagesAsset.named("warning")),
-            const SizedBox(height: 8),
+            const Spacer(),
             Text(
               title,
               style: TextStyles.titleWithSize(
@@ -48,7 +48,7 @@ class AlertBottomSheet extends StatelessWidget {
               style: TextStyles.titleWithSize(size: 16),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 32),
+            const Spacer(),
             PrimaryButton(
               title: mainButtonTitle,
               onPressed: confirmation,
@@ -59,7 +59,8 @@ class AlertBottomSheet extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
               },
-            )
+            ),
+            const SizedBox(height: 32),
           ],
         ),
       ),

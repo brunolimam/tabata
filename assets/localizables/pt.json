@@ -15,5 +15,7 @@
     "total_time": "Tempo total",
     "minutes": "Minutos",
     "seconds": "Segundos",
-    "select": "Selecionar"
+    "select": "Selecionar",
+    "next": "Próximo",
+    "settings_header_title": "Toque nas opções para editar"
 }
