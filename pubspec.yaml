@@ -39,6 +39,7 @@ dependencies:
   get_it: ^7.2.0
   flutter_svg: ^1.1.0
   easy_localization: ^3.0.1
+  numberpicker: ^2.1.1
 
 dev_dependencies:
   flutter_test:
@@ -85,6 +86,8 @@ flutter:
     - family: Lato
       fonts:
         - asset: assets/fonts/Lato-Regular.ttf
+        - asset: assets/fonts/Lato-Medium.ttf
+          weight: 500
         - asset: assets/fonts/Lato-Bold.ttf
           weight: 700
         - asset: assets/fonts/Lato-Black.ttf

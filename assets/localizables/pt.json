@@ -1,5 +1,19 @@
 {
     "first_setup_workout_title": "Vamos começar o seu primeiro Treino Tabata?",
     "first_setup_workout_subtitle": "No próximo passo você vai criar o Tabata ideal para o seu treino.",
-    "create_tabata": "Criar Tabata"
+    "create_tabata": "Criar Tabata",
+    "cancel_confirm_title": "Tem certeza que deseja sair?",
+    "cancel_confirm_subtitle": "Ao sair, as alterações realizadas não serão salvas.",
+    "leave": "Sair",
+    "back": "Voltar",
+    "settings": "Configurações",
+    "series_time": "Tempo da série",
+    "series_quantity": "Quantidade de séries",
+    "rest_time": "Tempo de descanso",
+    "cycles_quantity": "Quantidade de ciclos",
+    "time_between_cicles": "Intervalo entre ciclos",
+    "total_time": "Tempo total",
+    "minutes": "Minutos",
+    "seconds": "Segundos",
+    "select": "Selecionar"
 }

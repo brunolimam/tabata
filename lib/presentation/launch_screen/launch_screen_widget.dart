@@ -14,7 +14,6 @@ class LaunchScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorAsset.mainBackground,
       body: BlocProvider<LaunchScreenBloc>(
         create: (context) => launchScreenBloc..add(StartLaunchScreenEvent()),
         child: BlocBuilder<LaunchScreenBloc, LaunchScreenState>(

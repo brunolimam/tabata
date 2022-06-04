@@ -5,6 +5,7 @@ import 'package:tabata/injector.dart';
 import 'package:tabata/presentation/first_setup/first_setup_widget.dart';
 import 'package:tabata/presentation/launch_screen/bloc/launch_screen_bloc.dart';
 import 'package:tabata/presentation/launch_screen/launch_screen_widget.dart';
+import 'package:tabata/utils/color_asset.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: ColorAsset.mainBackground,
       ),
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,

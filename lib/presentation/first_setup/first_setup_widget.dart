@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tabata/presentation/components/bottom_sheets/alert_bottom_sheet.dart';
 import 'package:tabata/presentation/components/buttons/primary_button.dart';
+import 'package:tabata/presentation/settings/settings_widget.dart';
 import 'package:tabata/utils/asset_load.dart';
 import 'package:tabata/utils/color_asset.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:tabata/utils/dimens.dart';
+import 'package:tabata/utils/navigator_utils.dart';
 import 'package:tabata/utils/text_sizes.dart';
 import 'package:tabata/utils/text_styles.dart';
 
@@ -19,7 +22,6 @@ class _FirstSetupWidgetState extends State<FirstSetupWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorAsset.mainBackground,
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -42,7 +44,7 @@ class _FirstSetupWidgetState extends State<FirstSetupWidget> {
           child: IconButton(
             onPressed: _closeSetup,
             icon: const Icon(Icons.close),
-            color: ColorAsset.textColor,
+            color: ColorAsset.iconColor,
           ),
         )
       ],
@@ -52,7 +54,7 @@ class _FirstSetupWidgetState extends State<FirstSetupWidget> {
   Widget _buildContent() {
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: Dimens.horizontal,
+        horizontal: Dimens.largeHorizontal,
       ),
       child: Center(
         child: Column(
@@ -86,7 +88,22 @@ class _FirstSetupWidgetState extends State<FirstSetupWidget> {
     );
   }
 
-  _closeSetup() {}
+  _closeSetup() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return AlertBottomSheet(
+          title: "cancel_confirm_title".tr(),
+          subtitle: "cancel_confirm_subtitle".tr(),
+          mainButtonTitle: "leave".tr(),
+          secondaryButtonTitle: "back".tr(),
+          confirmation: () {},
+        );
+      },
+    );
+  }
 
-  _createTabata() {}
+  _createTabata() {
+    NavigatorUtils.navigate(context, const SettingsWidget());
+  }
 }
