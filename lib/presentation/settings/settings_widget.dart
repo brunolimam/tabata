@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
-import 'package:tabata/domain/text_to_time/get_time_from_text_use_case.dart';
-import 'package:tabata/domain/time_to_text/get_text_from_time_use_case.dart';
-import 'package:tabata/domain/total_time/get_total_time_use_case.dart';
+import 'package:tabata/domain/usecases/text_to_time/get_time_from_text_use_case.dart';
+import 'package:tabata/domain/usecases/time_to_text/get_text_from_time_use_case.dart';
+import 'package:tabata/domain/usecases/total_time/get_total_time_use_case.dart';
 import 'package:tabata/presentation/components/bars/close_title_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:tabata/presentation/components/bottom_sheets/alert_bottom_sheet.dart';

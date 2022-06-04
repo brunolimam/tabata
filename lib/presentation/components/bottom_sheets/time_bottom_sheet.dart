@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tabata/domain/entities/Time.dart';
-import 'package:tabata/domain/text_to_time/get_time_from_text_use_case.dart';
-import 'package:tabata/domain/time_to_text/get_text_from_time_use_case.dart';
+import 'package:tabata/domain/usecases/text_to_time/get_time_from_text_use_case.dart';
+import 'package:tabata/domain/usecases/time_to_text/get_text_from_time_use_case.dart';
 import 'package:tabata/presentation/components/buttons/primary_button.dart';
 import 'package:tabata/presentation/components/pickers/main_number_picker.dart';
 import 'package:tabata/utils/color_asset.dart';

@@ -4,7 +4,6 @@ import 'package:lottie/lottie.dart';
 import 'package:tabata/presentation/launch_screen/bloc/launch_screen_bloc.dart';
 import 'package:tabata/utils/asset_load.dart';
 import 'package:tabata/utils/change_root_screen_utils.dart';
-import 'package:tabata/utils/color_asset.dart';
 
 class LaunchScreenWidget extends StatelessWidget {
   const LaunchScreenWidget({required this.launchScreenBloc, super.key});
@@ -26,11 +25,16 @@ class LaunchScreenWidget extends StatelessWidget {
                   height: 230,
                 ),
               );
-            } else if (state is LaunchScreenClose) {
+            } else if (state is LaunchScreenGoToFirstSetup) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 ChangeRootScreenUtils.changeToFirsSetup(context);
               });
-              return const Text("Changing root screen");
+              return const Text("Changing to first step screen");
+            } else if (state is LaunchScreenGoToWorkout) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ChangeRootScreenUtils.changeToWorkout(context);
+              });
+              return const Text("Changing to workout screen");
             }
 
             return const Text("Something went wrong");

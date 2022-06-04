@@ -41,6 +41,9 @@ dependencies:
   easy_localization: ^3.0.1
   numberpicker: ^2.1.1
   equatable: ^2.0.0
+  firebase_core: ^1.17.1
+  firebase_auth: ^3.3.19
+  firebase_auth_mocks: ^0.8.4
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +56,8 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   bloc_test: ^9.0.0
+  mockito: ^5.2.0
+  build_runner: ^2.1.11
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

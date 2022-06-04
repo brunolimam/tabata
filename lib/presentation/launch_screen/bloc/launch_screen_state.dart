@@ -5,4 +5,6 @@ abstract class LaunchScreenState {}
 
 class LaunchScreenInitial extends LaunchScreenState {}
 
-class LaunchScreenClose extends LaunchScreenState {}
+class LaunchScreenGoToFirstSetup extends LaunchScreenState {}
+
+class LaunchScreenGoToWorkout extends LaunchScreenState {}

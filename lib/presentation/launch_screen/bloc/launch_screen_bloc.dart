@@ -1,13 +1,14 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-
+import 'package:tabata/domain/usecases/auth/is_user_authenticated_use_case.dart';
 part 'launch_screen_event.dart';
 part 'launch_screen_state.dart';
 
 class LaunchScreenBloc extends Bloc<LaunchScreenEvent, LaunchScreenState> {
-  LaunchScreenBloc() : super(LaunchScreenInitial()) {
+  IsUserAuthenticatedUseCase _authenticatedUseCase;
+
+  LaunchScreenBloc(this._authenticatedUseCase) : super(LaunchScreenInitial()) {
     on<StartLaunchScreenEvent>(_mapStartTimer);
   }
 
@@ -16,7 +17,10 @@ class LaunchScreenBloc extends Bloc<LaunchScreenEvent, LaunchScreenState> {
     emit(LaunchScreenInitial());
 
     await Future.delayed(event.loadTime, () {
-      emit(LaunchScreenClose());
+      LaunchScreenState nextState = _authenticatedUseCase.execute()
+          ? LaunchScreenGoToWorkout()
+          : LaunchScreenGoToFirstSetup();
+      emit(nextState);
     });
   }
 }
