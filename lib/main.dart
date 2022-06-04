@@ -1,14 +1,25 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tabata/injector.dart';
+import 'package:tabata/presentation/first_setup/first_setup_widget.dart';
 import 'package:tabata/presentation/launch_screen/bloc/launch_screen_bloc.dart';
 import 'package:tabata/presentation/launch_screen/launch_screen_widget.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await EasyLocalization.ensureInitialized();
   await initializeDependencies();
-  runApp(MyApp());
+
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('pt')],
+      path: 'assets/localizables',
+      fallbackLocale: const Locale('pt'),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -25,7 +36,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LaunchScreenWidget(launchScreenBloc: _subwayLinesBloc),
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
+
+      home:
+          FirstSetupWidget(), //LaunchScreenWidget(launchScreenBloc: _subwayLinesBloc),
     );
   }
 }
