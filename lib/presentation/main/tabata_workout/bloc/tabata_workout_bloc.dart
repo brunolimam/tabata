@@ -1,10 +1,7 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:tabata/domain/entities/tabata.dart';
-import 'package:tabata/domain/entities/time.dart';
 import 'package:tabata/domain/usecases/seconds_to_time/get_time_from_seconds.dart';
 import 'package:tabata/domain/usecases/text_to_time/get_time_from_text_use_case.dart';
 import 'package:tabata/domain/usecases/time_to_seconds/get_seconds_from_time.dart';
@@ -16,144 +13,187 @@ part 'tabata_workout_event.dart';
 part 'tabata_workout_state.dart';
 
 class TabataWorkoutBloc extends Bloc<TabataWorkoutEvent, TabataWorkoutState> {
-  final Tabata _tabata;
-  final GetTimeFromTextUseCase _getTimeFromTextUseCase;
-  final GetSecondsFromTime _getSecondsFromTime;
-  final GetTotalTimeUseCase _getTotalTimeUseCase;
-  final GetTimeFromSeconds _getTimeFromSeconds;
-  final GetTextFromTimeUseCase _getTextFromTimeUseCase;
+  final Tabata tabata;
+  final GetTimeFromTextUseCase getTimeFromTextUseCase;
+  final GetSecondsFromTime getSecondsFromTime;
+  final GetTotalTimeUseCase getTotalTimeUseCase;
+  final GetTimeFromSeconds getTimeFromSeconds;
+  final GetTextFromTimeUseCase getTextFromTimeUseCase;
 
   int _prepareRemainingTime = 3;
 
-  Ticker? _prepareTicker;
-  Ticker? _exerciseTicker;
-  Ticker? _restTicker;
-  Ticker? _cyleRestTicker;
-
-  Ticker? _currentTicker;
-  StreamSubscription<int>? _tickerSubscription;
+  Duration tickerDuration;
+  Timer? _currentTimer;
 
   late TabataWorkout _currentTabataWorkout;
   TabataWorkoutBlocState _currentState = TabataWorkoutBlocState.isPreparing;
 
-  TabataWorkoutBloc(
-    this._tabata,
-    this._getTimeFromTextUseCase,
-    this._getSecondsFromTime,
-    this._getTotalTimeUseCase,
-    this._getTimeFromSeconds,
-    this._getTextFromTimeUseCase,
-  ) : super(const TabataWorkoutPrepare()) {
-    _currentTabataWorkout = _getInitialTabataWorkout(_tabata);
+  TabataWorkoutBloc({
+    required this.tabata,
+    required this.getTimeFromTextUseCase,
+    required this.getSecondsFromTime,
+    required this.getTotalTimeUseCase,
+    required this.getTimeFromSeconds,
+    required this.getTextFromTimeUseCase,
+    this.tickerDuration = const Duration(seconds: 1),
+  }) : super(const TabataWorkoutPrepare()) {
+    _currentTabataWorkout = _getInitialTabataWorkout(tabata);
     on<StartTabataWorkoutEvent>(_mapStartWorkout);
     on<PauseTabataWorkoutEvent>(_mapPauseWorkout);
-    on<StopTabataWorkoutEvent>(_mapStopWorkout);
+    on<PlayTabataWorkoutEvent>(_mapPlayWorkout);
     on<RestartTabataWorkoutEvent>(_mapRestartWorkout);
-  }
-
-  TabataWorkout _getInitialTabataWorkout(Tabata tabata) {
-    var seriesTime = _getTimeFromTextUseCase.execute(tabata.seriesTime);
-    var seriesTimeSeconds = _getSecondsFromTime.execute(seriesTime);
-
-    var restTime = _getTimeFromTextUseCase.execute(tabata.restTime);
-    var restTimeSeconds = _getSecondsFromTime.execute(restTime);
-
-    var intervalTime =
-        _getTimeFromTextUseCase.execute(tabata.timeBetweenCycles);
-    var intervalTimeSeconds = _getSecondsFromTime.execute(intervalTime);
-
-    var seriesNumber = int.parse(tabata.seriesQuantity);
-    var cylesNumber = int.parse(tabata.cycleQuantity);
-
-    var totalTimeText = _getTotalTimeUseCase.execute(tabata);
-    var totalTimeInTime = _getTimeFromTextUseCase.execute(totalTimeText);
-    var totalTimeInSeconds = _getSecondsFromTime.execute(totalTimeInTime);
-
-    return TabataWorkout(
-      seriesTimeSeconds,
-      seriesTimeSeconds,
-      1,
-      seriesNumber,
-      1,
-      cylesNumber,
-      restTimeSeconds,
-      restTimeSeconds,
-      intervalTimeSeconds,
-      intervalTimeSeconds,
-      totalTimeInSeconds,
-      totalTimeInSeconds,
-      totalTimeText,
-    );
+    on<TabataWorkoutTimerTicked>(_onTicked);
   }
 
   void _mapStartWorkout(
     StartTabataWorkoutEvent event,
     Emitter<TabataWorkoutState> emit,
-  ) {
-    _currentTicker?.stop();
-    _currentTicker = Ticker(
-      (elapsed) {
-        add(TabataWorkoutTimerTicked());
-      },
-    );
+  ) async {
+    _startTicker();
   }
 
   void _mapPauseWorkout(
     PauseTabataWorkoutEvent event,
     Emitter<TabataWorkoutState> emit,
-  ) async {}
+  ) async {
+    _currentTimer?.cancel();
+    _currentTabataWorkout.isPaused = true;
+    _updateState(emit);
+  }
 
-  void _mapStopWorkout(
-    StopTabataWorkoutEvent event,
+  void _mapPlayWorkout(
+    PlayTabataWorkoutEvent event,
     Emitter<TabataWorkoutState> emit,
-  ) async {}
+  ) async {
+    _startTicker();
+    _currentTabataWorkout.isPaused = false;
+    _updateState(emit);
+  }
 
   void _mapRestartWorkout(
     RestartTabataWorkoutEvent event,
     Emitter<TabataWorkoutState> emit,
-  ) async {}
+  ) async {
+    _currentTabataWorkout = _getInitialTabataWorkout(tabata);
+    _currentState = TabataWorkoutBlocState.isPreparing;
+    _prepareRemainingTime = 3;
+    _startTicker();
+    _updateState(emit);
+  }
+
+  _updateState(Emitter<TabataWorkoutState> emit) {
+    switch (_currentState) {
+      case TabataWorkoutBlocState.isPreparing:
+        emit(TabataWorkoutPrepare(prepareTimeRemaining: _prepareRemainingTime));
+        break;
+
+      case TabataWorkoutBlocState.isExercising:
+        emit(TabataWorkoutExercise(_currentTabataWorkout));
+
+        break;
+      case TabataWorkoutBlocState.isResting:
+        emit(TabataWorkoutRest(_currentTabataWorkout));
+
+        break;
+      case TabataWorkoutBlocState.isCyleResting:
+        emit(TabataWorkoutCycleRest(_currentTabataWorkout));
+
+        break;
+      case TabataWorkoutBlocState.isFinished:
+        break;
+    }
+  }
 
   void _onTicked(
     TabataWorkoutTimerTicked event,
     Emitter<TabataWorkoutState> emit,
   ) {
-    _decrementTotalTime();
     switch (_currentState) {
       case TabataWorkoutBlocState.isPreparing:
-        _decrementPreparingTime();
-        if (_prepareRemainingTime == 0) {
-          _restartPrepareTime();
-          _currentState = TabataWorkoutBlocState.isExercising;
-        }
+        _tickedPreparing(emit);
         break;
       case TabataWorkoutBlocState.isExercising:
-        _decrementExerciseTime();
-        if (_currentTabataWorkout.seriesTimeRemaining == 0) {
-          _restartExerciseTime();
-
-          if (_currentTabataWorkout.isOnEndOfCycle()) {
-            _currentState = TabataWorkoutBlocState.isCyleResting;
-          } else if (_currentTabataWorkout.isOnEndOfExercise()) {
-            _currentState = TabataWorkoutBlocState.isFinished;
-          }
-        }
+        _decrementTotalTime();
+        _tickerExercising(emit);
         break;
       case TabataWorkoutBlocState.isResting:
-        _decrementRestTime();
-        if (_currentTabataWorkout.restTimeRemaining == 0) {
-          _restartRestTime();
-          _currentState = TabataWorkoutBlocState.isExercising;
-        }
+        _decrementTotalTime();
+        _tickedResting(emit);
         break;
       case TabataWorkoutBlocState.isCyleResting:
-        _decrementCycleRestTime();
-        if (_currentTabataWorkout.intervalTimeRemaining == 0) {
-          _restartCycleRestTime();
-        }
+        _decrementTotalTime();
+        _tickedCycleResting(emit);
         break;
       case TabataWorkoutBlocState.isFinished:
         break;
     }
+  }
+
+  _startTicker() {
+    _currentTimer?.cancel();
+    _currentTimer = Timer.periodic(
+      tickerDuration,
+      (_) => add(
+        TabataWorkoutTimerTicked(),
+      ),
+    );
+  }
+
+  _tickedPreparing(Emitter<TabataWorkoutState> emit) {
+    _decrementPreparingTime();
+    if (_prepareRemainingTime == 0) {
+      _restartPrepareTime();
+      _currentState = TabataWorkoutBlocState.isExercising;
+      return emit(TabataWorkoutExercise(_currentTabataWorkout));
+    }
+
+    emit(TabataWorkoutPrepare(prepareTimeRemaining: _prepareRemainingTime));
+  }
+
+  _tickerExercising(Emitter<TabataWorkoutState> emit) {
+    _decrementExerciseTime();
+    if (_currentTabataWorkout.seriesTimeRemaining == 0) {
+      _restartExerciseTime();
+
+      if (_currentTabataWorkout.isOnEndOfExercise()) {
+        _currentState = TabataWorkoutBlocState.isFinished;
+        _currentTimer?.cancel();
+        return emit(TabataWorkoutFinished());
+      } else if (_currentTabataWorkout.isOnEndOfCycle()) {
+        _restartExerciseNumer();
+        _incrementCycleNumber();
+        _currentState = TabataWorkoutBlocState.isCyleResting;
+        return emit(TabataWorkoutCycleRest(_currentTabataWorkout));
+      } else {
+        _incrementSerieNumber();
+        _currentState = TabataWorkoutBlocState.isResting;
+        return emit(TabataWorkoutRest(_currentTabataWorkout));
+      }
+    }
+
+    emit(TabataWorkoutExercise(_currentTabataWorkout));
+  }
+
+  _tickedResting(Emitter<TabataWorkoutState> emit) {
+    _decrementRestTime();
+    if (_currentTabataWorkout.restTimeRemaining == 0) {
+      _restartRestTime();
+      _currentState = TabataWorkoutBlocState.isExercising;
+      return emit(TabataWorkoutExercise(_currentTabataWorkout));
+    }
+
+    emit(TabataWorkoutRest(_currentTabataWorkout));
+  }
+
+  _tickedCycleResting(Emitter<TabataWorkoutState> emit) {
+    _decrementCycleRestTime();
+    if (_currentTabataWorkout.intervalTimeRemaining == 0) {
+      _restartCycleRestTime();
+      _currentState = TabataWorkoutBlocState.isExercising;
+      return emit(TabataWorkoutExercise(_currentTabataWorkout));
+    }
+
+    emit(TabataWorkoutCycleRest(_currentTabataWorkout));
   }
 
   _restartPrepareTime() {
@@ -163,6 +203,10 @@ class TabataWorkoutBloc extends Bloc<TabataWorkoutEvent, TabataWorkoutState> {
   _restartExerciseTime() {
     _currentTabataWorkout.seriesTimeRemaining =
         _currentTabataWorkout.seriesTime;
+  }
+
+  _restartExerciseNumer() {
+    _currentTabataWorkout.currentSeriesNumber = 1;
   }
 
   _restartRestTime() {
@@ -179,7 +223,7 @@ class TabataWorkoutBloc extends Bloc<TabataWorkoutEvent, TabataWorkoutState> {
   }
 
   _decrementPreparingTime() {
-    _currentTabataWorkout.seriesTimeRemaining -= 1;
+    _prepareRemainingTime -= 1;
   }
 
   _decrementExerciseTime() {
@@ -197,8 +241,8 @@ class TabataWorkoutBloc extends Bloc<TabataWorkoutEvent, TabataWorkoutState> {
   _decrementTotalTime() {
     _currentTabataWorkout.totalTimeRemaining -= 1;
     var time =
-        _getTimeFromSeconds.execute(_currentTabataWorkout.totalTimeRemaining);
-    _currentTabataWorkout.totalTimeText = _getTextFromTimeUseCase.execute(time);
+        getTimeFromSeconds.execute(_currentTabataWorkout.totalTimeRemaining);
+    _currentTabataWorkout.totalTimeText = getTextFromTimeUseCase.execute(time);
   }
 
   _incrementSerieNumber() {
@@ -207,5 +251,40 @@ class TabataWorkoutBloc extends Bloc<TabataWorkoutEvent, TabataWorkoutState> {
 
   _incrementCycleNumber() {
     _currentTabataWorkout.currentCylesNumber += 1;
+  }
+
+  TabataWorkout _getInitialTabataWorkout(Tabata tabata) {
+    var seriesTime = getTimeFromTextUseCase.execute(tabata.seriesTime);
+    var seriesTimeSeconds = getSecondsFromTime.execute(seriesTime);
+
+    var restTime = getTimeFromTextUseCase.execute(tabata.restTime);
+    var restTimeSeconds = getSecondsFromTime.execute(restTime);
+
+    var intervalTime = getTimeFromTextUseCase.execute(tabata.timeBetweenCycles);
+    var intervalTimeSeconds = getSecondsFromTime.execute(intervalTime);
+
+    var seriesNumber = int.parse(tabata.seriesQuantity);
+    var cylesNumber = int.parse(tabata.cycleQuantity);
+
+    var totalTimeText = getTotalTimeUseCase.execute(tabata);
+    var totalTimeInTime = getTimeFromTextUseCase.execute(totalTimeText);
+    var totalTimeInSeconds = getSecondsFromTime.execute(totalTimeInTime);
+
+    return TabataWorkout(
+      false,
+      seriesTimeSeconds,
+      seriesTimeSeconds,
+      1,
+      seriesNumber,
+      1,
+      cylesNumber,
+      restTimeSeconds,
+      restTimeSeconds,
+      intervalTimeSeconds,
+      intervalTimeSeconds,
+      totalTimeInSeconds,
+      totalTimeInSeconds,
+      totalTimeText,
+    );
   }
 }

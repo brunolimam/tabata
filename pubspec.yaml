@@ -46,6 +46,7 @@ dependencies:
   firebase_auth_mocks: ^0.8.4
   cloud_firestore: ^3.1.17
   fake_cloud_firestore: ^1.2.2
+  audioplayers: ^0.20.1
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +79,7 @@ flutter:
     - assets/icons/
     - assets/images/
     - assets/localizables/
+    - assets/audios/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

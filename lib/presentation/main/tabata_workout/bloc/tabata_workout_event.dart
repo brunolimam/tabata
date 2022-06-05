@@ -11,6 +11,8 @@ class StartTabataWorkoutEvent extends TabataWorkoutEvent {}
 
 class PauseTabataWorkoutEvent extends TabataWorkoutEvent {}
 
+class PlayTabataWorkoutEvent extends TabataWorkoutEvent {}
+
 class StopTabataWorkoutEvent extends TabataWorkoutEvent {}
 
 class RestartTabataWorkoutEvent extends TabataWorkoutEvent {}

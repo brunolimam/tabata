@@ -17,4 +17,6 @@ abstract class ColorAsset {
 
   static get blackDivider => const Color(0xFF000000);
   static get tabataItemHeader => const Color(0xFFE3E5E8);
+
+  static get restColor => const Color(0xFF6EBA5E);
 }

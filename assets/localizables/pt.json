@@ -24,5 +24,14 @@
     "cycles": "Ciclos",
     "edit_tabata": "Editar tabata",
     "loading": "Carregando",
-    "tap_to_play": "Toque para iniciar"
+    "tap_to_play": "Toque para iniciar",
+    "exercise": "Exercite",
+    "rest": "Descanse",
+    "interval": "Intervalo",
+    "stop_workout_title": "Tem certeza que deseja finalizar o treino?",
+    "stop_workout_subtitle": "Ao finalizar, o treino em andamento fechará e não será salvo.",
+    "finish_workout": "Finalizar treino",
+    "restart_workout_title": "Tem certeza que deseja recomeçar o treino?",
+    "restart_workout_subtitle": "Ao recomeçar, o treino em andamento não será salvo.",
+    "restart_workout": "Recomeçar treino"
 }

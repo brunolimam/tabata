@@ -13,6 +13,7 @@ import 'package:tabata/presentation/components/loading/loading_state_widget.dart
 import 'package:tabata/presentation/components/tabata/tabata_item_header.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:tabata/presentation/main/tabata/bloc/tabata_bloc.dart';
+import 'package:tabata/presentation/main/tabata_workout/bloc/tabata_workout_bloc.dart';
 import 'package:tabata/presentation/main/tabata_workout/tabata_workout_widget.dart';
 import 'package:tabata/presentation/settings/settings_widget.dart';
 import 'package:tabata/utils/asset_load.dart';
@@ -126,7 +127,10 @@ class _TabataWidgetState extends State<TabataWidget> {
           onPressed: () => _startTabataWorkout(tabata),
           child: Column(
             children: [
-              SvgPicture.asset(IconsAsset.named("play")),
+              SvgPicture.asset(
+                IconsAsset.named("play"),
+                color: ColorAsset.textColor,
+              ),
               const SizedBox(height: 24),
               Text(
                 'tap_to_play'.tr(),
@@ -157,9 +161,15 @@ class _TabataWidgetState extends State<TabataWidget> {
   }
 
   _startTabataWorkout(Tabata tabata) {
+    GetIt getIt = GetIt.instance;
+    TabataWorkoutBloc tabataWorkoutBloc =
+        getIt<TabataWorkoutBloc>(param1: tabata);
     NavigatorUtils.navigate(
       context,
-      TabataWorkoutWidget(tabata: tabata),
+      TabataWorkoutWidget(
+        tabata: tabata,
+        tabataWorkoutBloc: tabataWorkoutBloc,
+      ),
     );
   }
 }

@@ -25,3 +25,11 @@ abstract class ImagesAsset extends AssetLoad {
     return "${AssetLoad.assetsPath}$imagesAssetPath$imageName.svg";
   }
 }
+
+abstract class AudioAsset extends AssetLoad {
+  static const audiosAssetPath = 'audios/';
+
+  static String named(String imageName) {
+    return "$audiosAssetPath$imageName.mp3";
+  }
+}

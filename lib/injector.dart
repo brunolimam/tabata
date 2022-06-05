@@ -13,6 +13,7 @@ import 'package:tabata/data/services/tabata/get_current_tabata_service.dart';
 import 'package:tabata/data/services/tabata/get_current_tabata_service_impl.dart';
 import 'package:tabata/data/services/tabata/set_current_tabata_service.dart';
 import 'package:tabata/data/services/tabata/set_current_tabata_service_impl.dart';
+import 'package:tabata/domain/entities/tabata.dart';
 import 'package:tabata/domain/repositories/create_anonymous_user_repository.dart';
 import 'package:tabata/domain/repositories/get_current_tabata_repository.dart';
 import 'package:tabata/domain/repositories/get_current_user_repository.dart';
@@ -37,6 +38,7 @@ import 'package:tabata/domain/usecases/total_time/get_total_time_use_case.dart';
 import 'package:tabata/domain/usecases/total_time/get_total_time_use_case_impl.dart';
 import 'package:tabata/presentation/launch_screen/bloc/launch_screen_bloc.dart';
 import 'package:tabata/presentation/main/tabata/bloc/tabata_bloc.dart';
+import 'package:tabata/presentation/main/tabata_workout/bloc/tabata_workout_bloc.dart';
 
 final injector = GetIt.instance;
 
@@ -46,6 +48,7 @@ Future<void> initializeDependencies() async {
   registerFirstSetupScreenDependencies();
   settingScreenDependencies();
   tabataScreenDependencies();
+  tabataWorkoutScreenDependencies();
 }
 
 Future<void> registerFirebaseSingletons() async {
@@ -104,4 +107,17 @@ Future<void> settingScreenDependencies() async {
 
 Future<void> tabataScreenDependencies() async {
   injector.registerFactory(() => TabataBloc(injector(), injector()));
+}
+
+Future<void> tabataWorkoutScreenDependencies() async {
+  injector.registerFactoryParam<TabataWorkoutBloc, Tabata, dynamic>(
+    (param1, param2) => TabataWorkoutBloc(
+      tabata: param1,
+      getSecondsFromTime: injector(),
+      getTextFromTimeUseCase: injector(),
+      getTimeFromSeconds: injector(),
+      getTimeFromTextUseCase: injector(),
+      getTotalTimeUseCase: injector(),
+    ),
+  );
 }

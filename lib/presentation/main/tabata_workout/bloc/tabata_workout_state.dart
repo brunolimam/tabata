@@ -1,6 +1,7 @@
 part of 'tabata_workout_bloc.dart';
 
 class TabataWorkout {
+  bool isPaused;
   final int seriesTime;
   int seriesTimeRemaining;
   final int seriesNumber;
@@ -16,6 +17,7 @@ class TabataWorkout {
   String totalTimeText;
 
   TabataWorkout(
+    this.isPaused,
     this.seriesTime,
     this.seriesTimeRemaining,
     this.currentSeriesNumber,
@@ -32,20 +34,17 @@ class TabataWorkout {
   );
 
   bool isOnEndOfCycle() {
-    return seriesNumber == currentCylesNumber && cylesNumber != 1;
+    return seriesNumber == currentSeriesNumber && cylesNumber != 1;
   }
 
   bool isOnEndOfExercise() {
-    return seriesNumber == currentCylesNumber &&
+    return seriesNumber == currentSeriesNumber &&
         cylesNumber == currentCylesNumber;
   }
 }
 
-abstract class TabataWorkoutState extends Equatable {
+abstract class TabataWorkoutState {
   const TabataWorkoutState();
-
-  @override
-  List<Object> get props => [];
 }
 
 class TabataWorkoutPrepare extends TabataWorkoutState {
@@ -72,8 +71,10 @@ class TabataWorkoutPause extends TabataWorkoutState {
   const TabataWorkoutPause(this.tabataWorkout);
 }
 
-class TabataWorkoutInterval extends TabataWorkoutState {
+class TabataWorkoutCycleRest extends TabataWorkoutState {
   final TabataWorkout tabataWorkout;
 
-  const TabataWorkoutInterval(this.tabataWorkout);
+  const TabataWorkoutCycleRest(this.tabataWorkout);
 }
+
+class TabataWorkoutFinished extends TabataWorkoutState {}
