@@ -48,5 +48,9 @@
     "your_workouts": "Seus treinos",
     "empty_workouts_title": "Nenhum treino por aqui.",
     "empty_workouts_subtitle": "Toque em \"Tabata\" e realize um treino.",
-    "repeat_tabata": "Repetir tabata"
+    "repeat_tabata": "Repetir tabata",
+    "workout_details": "Detalhes do treino",
+    "delete": "Excluir",
+    "delete_workout_title":  "Tem certeza que deseja excluir?",
+    "delete_workout_subtitle":  "Ao excluir, o treino será apagado e não poderá ser recuperado."
 }

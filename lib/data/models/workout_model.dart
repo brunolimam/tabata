@@ -14,8 +14,9 @@ class WorkoutModel extends Workout {
           date: date,
         );
 
-  WorkoutModel.map(Map<String, dynamic> map)
+  WorkoutModel.map(Map<String, dynamic> map, String id)
       : super(
+          id: id,
           tabata: TabataModel.map(map['tabata']),
           feedback: WorkoutFeedbackModel.map(map['feedback']),
           date: (map['date'] as Timestamp).toDate(),

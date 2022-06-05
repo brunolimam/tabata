@@ -12,6 +12,7 @@ class AlertBottomSheet extends StatelessWidget {
   final String subtitle;
   final String mainButtonTitle;
   final String secondaryButtonTitle;
+  final String? iconName;
   final VoidCallback confirmation;
 
   const AlertBottomSheet({
@@ -20,6 +21,7 @@ class AlertBottomSheet extends StatelessWidget {
     required this.mainButtonTitle,
     required this.secondaryButtonTitle,
     required this.confirmation,
+    this.iconName,
     super.key,
   });
 
@@ -32,7 +34,7 @@ class AlertBottomSheet extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 34),
-            SvgPicture.asset(ImagesAsset.named("warning")),
+            SvgPicture.asset(ImagesAsset.named(iconName ?? "warning")),
             const Spacer(),
             Text(
               title,

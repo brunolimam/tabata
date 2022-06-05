@@ -6,6 +6,7 @@ import 'package:tabata/data/repositories/auth/current_user/get_current_user_repo
 import 'package:tabata/data/repositories/tabata/get_current_tabata_repository_impl.dart';
 import 'package:tabata/data/repositories/tabata/set_current_tabata_repository_impl.dart';
 import 'package:tabata/data/repositories/workout/add_workout_repository_impl.dart';
+import 'package:tabata/data/repositories/workout/delete_workout_repository_impl.dart';
 import 'package:tabata/data/repositories/workout/load_workouts_repository_impl.dart';
 import 'package:tabata/data/services/auth/create_anonymous_user_service.dart';
 import 'package:tabata/data/services/auth/create_anonymous_user_service_impl.dart';
@@ -17,11 +18,14 @@ import 'package:tabata/data/services/tabata/set_current_tabata_service.dart';
 import 'package:tabata/data/services/tabata/set_current_tabata_service_impl.dart';
 import 'package:tabata/data/services/workout/add_workout_service.dart';
 import 'package:tabata/data/services/workout/add_workout_service_impl.dart';
+import 'package:tabata/data/services/workout/delete_workout_service.dart';
+import 'package:tabata/data/services/workout/delete_workout_service_impl.dart';
 import 'package:tabata/data/services/workout/load_workouts_service.dart';
 import 'package:tabata/data/services/workout/load_workouts_service_impl.dart';
 import 'package:tabata/domain/entities/tabata.dart';
 import 'package:tabata/domain/repositories/add_workout_repository.dart';
 import 'package:tabata/domain/repositories/create_anonymous_user_repository.dart';
+import 'package:tabata/domain/repositories/delete_workout_repository.dart';
 import 'package:tabata/domain/repositories/get_current_tabata_repository.dart';
 import 'package:tabata/domain/repositories/get_current_user_repository.dart';
 import 'package:tabata/domain/repositories/load_workouts_repository.dart';
@@ -46,6 +50,8 @@ import 'package:tabata/domain/usecases/total_time/get_total_time_use_case.dart';
 import 'package:tabata/domain/usecases/total_time/get_total_time_use_case_impl.dart';
 import 'package:tabata/domain/usecases/workout/add_workout_use_case.dart';
 import 'package:tabata/domain/usecases/workout/add_workout_use_case_impl.dart';
+import 'package:tabata/domain/usecases/workout/delete_workout_use_case.dart';
+import 'package:tabata/domain/usecases/workout/delete_workout_use_case_impl.dart';
 import 'package:tabata/domain/usecases/workout/get_workouts_use_case.dart';
 import 'package:tabata/domain/usecases/workout/get_workouts_use_case_impl.dart';
 import 'package:tabata/presentation/launch_screen/bloc/launch_screen_bloc.dart';
@@ -64,6 +70,7 @@ Future<void> initializeDependencies() async {
   tabataWorkoutScreenDependencies();
   workoutFeedbackScreenDependencies();
   workoutsScreenDependencies();
+  workoutDetailScreenDependencies();
 }
 
 Future<void> registerFirebaseSingletons() async {
@@ -155,4 +162,13 @@ Future<void> workoutsScreenDependencies() async {
       () => LoadWorkoutsServiceImpl(injector()));
 
   injector.registerFactory(() => WorkoutsBloc(injector()));
+}
+
+Future<void> workoutDetailScreenDependencies() async {
+  injector.registerFactory<DeleteWorkoutService>(
+      () => DeleteWorkoutServiceImpl(injector()));
+  injector.registerFactory<DeleteWorkoutRepository>(
+      () => DeleteWorkoutRepositoryImpl(injector()));
+  injector.registerFactory<DeleteWorkoutUseCase>(
+      () => DeleteWorkoutUseCaseImpl(injector()));
 }

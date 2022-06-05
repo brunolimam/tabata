@@ -17,7 +17,7 @@ class LoadWorkoutsServiceImpl extends LoadWorkoutsService {
     var documents = snapshots.docs;
     return documents.map((e) {
       var data = e.data();
-      return WorkoutModel.map(data);
+      return WorkoutModel.map(data, e.id);
     }).toList();
   }
 }

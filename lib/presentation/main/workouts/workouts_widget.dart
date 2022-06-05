@@ -4,12 +4,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tabata/domain/entities/workout.dart';
 import 'package:tabata/domain/usecases/total_time/get_total_time_use_case.dart';
+import 'package:tabata/domain/usecases/workout/delete_workout_use_case.dart';
 import 'package:tabata/presentation/components/bars/title_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:tabata/presentation/components/loading/loading_state_widget.dart';
 import 'package:tabata/presentation/components/workout/workout_list_item.dart';
 import 'package:tabata/presentation/main/tabata_workout/bloc/tabata_workout_bloc.dart';
 import 'package:tabata/presentation/main/tabata_workout/tabata_workout_widget.dart';
+import 'package:tabata/presentation/main/workout_detail/workout_detail_widget.dart';
 import 'package:tabata/presentation/main/workouts/bloc/workouts_bloc.dart';
 import 'package:tabata/utils/asset_load.dart';
 import 'package:tabata/utils/navigator_utils.dart';
@@ -106,7 +108,18 @@ class _WorkoutsWidgetState extends State<WorkoutsWidget> {
     );
   }
 
-  _openWorkout(Workout workout) {}
+  _openWorkout(Workout workout) {
+    var deleteWorkoutUseCase = GetIt.instance.get<DeleteWorkoutUseCase>();
+    NavigatorUtils.navigate(
+      context,
+      WorkoutDetailWidget(
+        workout: workout,
+        getTotalTimeUseCase: widget.getTotalTimeUseCase,
+        deleteWorkoutUseCase: deleteWorkoutUseCase,
+      ),
+      popCallback: _reloadContent,
+    );
+  }
 
   _repeatWorkout(Workout workout) {
     var tabataWorkoutBloc =
