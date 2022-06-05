@@ -26,6 +26,6 @@ void main() {
     sut = GetCurrentUserServiceImpl(mockFirebaseAuth);
 
     var user = sut.get();
-    expect(user == null, true);
+    expect(user, null);
   });
 }

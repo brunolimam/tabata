@@ -44,6 +44,8 @@ dependencies:
   firebase_core: ^1.17.1
   firebase_auth: ^3.3.19
   firebase_auth_mocks: ^0.8.4
+  cloud_firestore: ^3.1.17
+  fake_cloud_firestore: ^1.2.2
 
 dev_dependencies:
   flutter_test:

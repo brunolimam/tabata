@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:tabata/domain/entities/tabata.dart';
+import 'package:tabata/domain/usecases/tabata/get_current_tabata_use_case.dart';
+import 'package:tabata/domain/usecases/tabata/set_current_tabata_use_case.dart';
 import 'package:tabata/domain/usecases/text_to_time/get_time_from_text_use_case.dart';
 import 'package:tabata/domain/usecases/time_to_text/get_text_from_time_use_case.dart';
 import 'package:tabata/domain/usecases/total_time/get_total_time_use_case.dart';
@@ -13,14 +16,19 @@ import 'package:tabata/presentation/components/buttons/primary_button.dart';
 import 'package:tabata/presentation/components/fields/settings_field/setting_field.dart';
 import 'package:tabata/presentation/components/fields/settings_field/setting_field_state.dart';
 import 'package:tabata/utils/asset_load.dart';
+import 'package:tabata/utils/change_root_screen_utils.dart';
 import 'package:tabata/utils/dimens.dart';
 import 'package:tabata/utils/text_styles.dart';
 
 class SettingsWidget extends StatefulWidget {
   final GetTotalTimeUseCase getTotalTimeUseCase;
+  final GetCurrentTabataUseCase getCurrentTabataUseCase;
+  final SetCurrentTabataUseCase setCurrentTabataUseCase;
 
   const SettingsWidget({
     required this.getTotalTimeUseCase,
+    required this.getCurrentTabataUseCase,
+    required this.setCurrentTabataUseCase,
     super.key,
   });
 
@@ -45,6 +53,18 @@ class _SettingsWidgetState extends State<SettingsWidget> {
     _restTimeController.text = "00:10";
     _cyclesQuantityController.text = "1";
     _timeBetweenCyclesController.text = "00:00";
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      Tabata tabata = await widget.getCurrentTabataUseCase.execute();
+
+      setState(() {
+        _seriesTimeController.text = tabata.seriesTime;
+        _seriesQuantityController.text = tabata.seriesQuantity;
+        _restTimeController.text = tabata.restTime;
+        _cyclesQuantityController.text = tabata.cycleQuantity;
+        _timeBetweenCyclesController.text = tabata.timeBetweenCycles;
+      });
+    });
   }
 
   @override
@@ -267,5 +287,16 @@ class _SettingsWidgetState extends State<SettingsWidget> {
     );
   }
 
-  _saveSettings() {}
+  _saveSettings() async {
+    Tabata tabata = Tabata(
+      seriesTime: _seriesTimeController.text,
+      seriesQuantity: _seriesQuantityController.text,
+      restTime: _restTimeController.text,
+      cycleQuantity: _cyclesQuantityController.text,
+      timeBetweenCycles: _timeBetweenCyclesController.text,
+    );
+
+    await widget.setCurrentTabataUseCase.execute(tabata);
+    ChangeRootScreenUtils.changeToWorkout(context);
+  }
 }

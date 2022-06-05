@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tabata/domain/usecases/auth/create_anonymous_user_use_case.dart';
+import 'package:tabata/domain/usecases/tabata/get_current_tabata_use_case.dart';
+import 'package:tabata/domain/usecases/tabata/set_current_tabata_use_case.dart';
 import 'package:tabata/domain/usecases/total_time/get_total_time_use_case.dart';
 import 'package:tabata/presentation/components/bottom_sheets/alert_bottom_sheet.dart';
 import 'package:tabata/presentation/components/buttons/primary_button.dart';
@@ -125,6 +127,8 @@ class _FirstSetupWidgetState extends State<FirstSetupWidget> {
       context,
       SettingsWidget(
         getTotalTimeUseCase: widget._getIt.get<GetTotalTimeUseCase>(),
+        getCurrentTabataUseCase: widget._getIt.get<GetCurrentTabataUseCase>(),
+        setCurrentTabataUseCase: widget._getIt.get<SetCurrentTabataUseCase>(),
       ),
     );
   }

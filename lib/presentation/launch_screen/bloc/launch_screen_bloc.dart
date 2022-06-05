@@ -6,7 +6,7 @@ part 'launch_screen_event.dart';
 part 'launch_screen_state.dart';
 
 class LaunchScreenBloc extends Bloc<LaunchScreenEvent, LaunchScreenState> {
-  IsUserAuthenticatedUseCase _authenticatedUseCase;
+  final IsUserAuthenticatedUseCase _authenticatedUseCase;
 
   LaunchScreenBloc(this._authenticatedUseCase) : super(LaunchScreenInitial()) {
     on<StartLaunchScreenEvent>(_mapStartTimer);

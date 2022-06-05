@@ -14,6 +14,10 @@ class GetCurrentUserServiceImpl extends GetCurrentUserService {
 
     var name = firebaseAuthUser.displayName;
     var email = firebaseAuthUser.email;
-    return UserModel(name, email);
+    return UserModel(
+      firebaseAuthUser.uid,
+      name,
+      email,
+    );
   }
 }

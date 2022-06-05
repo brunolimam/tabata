@@ -3,7 +3,7 @@ import 'package:tabata/data/services/auth/current_user/get_current_user_service.
 import 'package:tabata/domain/entities/user.dart';
 
 class GetCurrentUserRepositoryImpl extends GetCurrentUserRepository {
-  GetCurrentUserService _service;
+  final GetCurrentUserService _service;
 
   GetCurrentUserRepositoryImpl(this._service);
 

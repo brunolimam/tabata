@@ -3,7 +3,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:tabata/data/repositories/auth/current_user/get_current_user_repository_impl.dart';
 import 'package:tabata/data/services/auth/current_user/get_current_user_service_impl.dart';
-import '../../fixtures/user_data_fixture.dart';
+import '../../fixtures/user_model_fixture.dart';
 import 'get_current_user_repository_impl_test.mocks.dart';
 
 @GenerateMocks([GetCurrentUserServiceImpl])
@@ -19,7 +19,7 @@ void main() {
   test('get when service return null should return null', () {
     when(service.get()).thenReturn(null);
 
-    expect(sut.get() == null, true);
+    expect(sut.get(), null);
   });
 
   test('get when service return null should return user', () {
