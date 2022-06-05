@@ -21,6 +21,7 @@ import 'package:tabata/utils/dimens.dart';
 import 'package:tabata/utils/text_styles.dart';
 
 class SettingsWidget extends StatefulWidget {
+  final bool isEditing;
   final GetTotalTimeUseCase getTotalTimeUseCase;
   final GetCurrentTabataUseCase getCurrentTabataUseCase;
   final SetCurrentTabataUseCase setCurrentTabataUseCase;
@@ -29,6 +30,7 @@ class SettingsWidget extends StatefulWidget {
     required this.getTotalTimeUseCase,
     required this.getCurrentTabataUseCase,
     required this.setCurrentTabataUseCase,
+    this.isEditing = false,
     super.key,
   });
 
@@ -263,13 +265,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   }
 
   String _totalTime() {
-    return widget.getTotalTimeUseCase.execute(
-      _seriesTimeController.text,
-      _seriesQuantityController.text,
-      _restTimeController.text,
-      _cyclesQuantityController.text,
-      _timeBetweenCyclesController.text,
-    );
+    return widget.getTotalTimeUseCase.execute(_getTabata());
   }
 
   _closeSetup() {
@@ -281,22 +277,37 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           subtitle: "cancel_confirm_subtitle".tr(),
           mainButtonTitle: "leave".tr(),
           secondaryButtonTitle: "back".tr(),
-          confirmation: () {},
+          confirmation: () {
+            widget.isEditing
+                ? _backToTabata()
+                : ChangeRootScreenUtils.changeToWorkout(context);
+          },
         );
       },
     );
   }
 
-  _saveSettings() async {
-    Tabata tabata = Tabata(
+  _backToTabata() {
+    Navigator.pop(context);
+    Navigator.pop(context);
+  }
+
+  Tabata _getTabata() {
+    return Tabata(
       seriesTime: _seriesTimeController.text,
       seriesQuantity: _seriesQuantityController.text,
       restTime: _restTimeController.text,
       cycleQuantity: _cyclesQuantityController.text,
       timeBetweenCycles: _timeBetweenCyclesController.text,
     );
+  }
+
+  _saveSettings() async {
+    Tabata tabata = _getTabata();
 
     await widget.setCurrentTabataUseCase.execute(tabata);
-    ChangeRootScreenUtils.changeToWorkout(context);
+    widget.isEditing
+        ? Navigator.pop(context)
+        : ChangeRootScreenUtils.changeToWorkout(context);
   }
 }

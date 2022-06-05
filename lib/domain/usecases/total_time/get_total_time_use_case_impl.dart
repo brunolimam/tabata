@@ -1,3 +1,4 @@
+import 'package:tabata/domain/entities/tabata.dart';
 import 'package:tabata/domain/usecases/seconds_to_time/get_time_from_seconds.dart';
 import 'package:tabata/domain/usecases/text_to_time/get_time_from_text_use_case.dart';
 import 'package:tabata/domain/usecases/time_to_seconds/get_seconds_from_time.dart';
@@ -17,26 +18,20 @@ class GetTotalTimeUseCaseImpl extends GetTotalTimeUseCase {
       this._getTextFromTimeUseCase);
 
   @override
-  String execute(
-    String seriesTime,
-    String seriesQuantity,
-    String restTime,
-    String cycleQuantity,
-    String timeBetweenCycles,
-  ) {
-    var timeOfseries = _getTimeFromTextUseCase.execute(seriesTime);
+  String execute(Tabata tabata) {
+    var timeOfseries = _getTimeFromTextUseCase.execute(tabata.seriesTime);
     var seriesTimeInSeconds = _getSecondsFromTime.execute(timeOfseries);
 
-    var timeOfRest = _getTimeFromTextUseCase.execute(restTime);
+    var timeOfRest = _getTimeFromTextUseCase.execute(tabata.restTime);
     var restTimeInSeconds = _getSecondsFromTime.execute(timeOfRest);
 
     var timeOfBetweenCycles =
-        _getTimeFromTextUseCase.execute(timeBetweenCycles);
+        _getTimeFromTextUseCase.execute(tabata.timeBetweenCycles);
     var timeBetweenCyclesInSeconds =
         _getSecondsFromTime.execute(timeOfBetweenCycles);
 
-    var seriesQuantityValue = int.parse(seriesQuantity);
-    var cycleQuantityValue = int.parse(cycleQuantity);
+    var seriesQuantityValue = int.parse(tabata.seriesQuantity);
+    var cycleQuantityValue = int.parse(tabata.cycleQuantity);
 
     var totalBySeries = (seriesTimeInSeconds * seriesQuantityValue);
     var totalByRest = (restTimeInSeconds * (seriesQuantityValue - 1));

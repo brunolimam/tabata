@@ -36,6 +36,7 @@ import 'package:tabata/domain/usecases/time_to_text/get_text_from_time_use_case_
 import 'package:tabata/domain/usecases/total_time/get_total_time_use_case.dart';
 import 'package:tabata/domain/usecases/total_time/get_total_time_use_case_impl.dart';
 import 'package:tabata/presentation/launch_screen/bloc/launch_screen_bloc.dart';
+import 'package:tabata/presentation/main/tabata/bloc/tabata_bloc.dart';
 
 final injector = GetIt.instance;
 
@@ -43,7 +44,8 @@ Future<void> initializeDependencies() async {
   registerFirebaseSingletons();
   registerLaunchScreenDependencies();
   registerFirstSetupScreenDependencies();
-  settingScrenDependencies();
+  settingScreenDependencies();
+  tabataScreenDependencies();
 }
 
 Future<void> registerFirebaseSingletons() async {
@@ -70,7 +72,7 @@ Future<void> registerFirstSetupScreenDependencies() async {
       () => CreateAnonymousUserUseCaseImpl(injector()));
 }
 
-Future<void> settingScrenDependencies() async {
+Future<void> settingScreenDependencies() async {
   injector.registerFactory<GetTimeFromTextUseCase>(
       () => GetTimeFromTextUseCaseImpl());
   injector.registerFactory<GetTextFromTimeUseCase>(
@@ -98,4 +100,8 @@ Future<void> settingScrenDependencies() async {
         injector(),
         injector(),
       ));
+}
+
+Future<void> tabataScreenDependencies() async {
+  injector.registerFactory(() => TabataBloc(injector(), injector()));
 }

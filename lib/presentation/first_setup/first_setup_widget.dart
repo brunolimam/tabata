@@ -9,6 +9,7 @@ import 'package:tabata/presentation/components/bottom_sheets/alert_bottom_sheet.
 import 'package:tabata/presentation/components/buttons/primary_button.dart';
 import 'package:tabata/presentation/settings/settings_widget.dart';
 import 'package:tabata/utils/asset_load.dart';
+import 'package:tabata/utils/change_root_screen_utils.dart';
 import 'package:tabata/utils/color_asset.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:tabata/utils/dimens.dart';
@@ -108,18 +109,7 @@ class _FirstSetupWidgetState extends State<FirstSetupWidget> {
   }
 
   _closeSetup() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return AlertBottomSheet(
-          title: "cancel_confirm_title".tr(),
-          subtitle: "cancel_confirm_subtitle".tr(),
-          mainButtonTitle: "leave".tr(),
-          secondaryButtonTitle: "back".tr(),
-          confirmation: () {},
-        );
-      },
-    );
+    ChangeRootScreenUtils.changeToWorkout(context);
   }
 
   _createTabata() {

@@ -17,5 +17,12 @@
     "seconds": "Segundos",
     "select": "Selecionar",
     "next": "Próximo",
-    "settings_header_title": "Toque nas opções para editar"
+    "settings_header_title": "Toque nas opções para editar",
+    "tabata": "Tabata",
+    "workouts": "Atividades",
+    "series": "Series",
+    "cycles": "Ciclos",
+    "edit_tabata": "Editar tabata",
+    "loading": "Carregando",
+    "tap_to_play": "Toque para iniciar"
 }
