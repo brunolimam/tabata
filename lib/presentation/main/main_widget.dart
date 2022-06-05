@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:tabata/domain/usecases/total_time/get_total_time_use_case.dart';
 import 'package:tabata/presentation/main/tabata/bloc/tabata_bloc.dart';
 import 'package:tabata/presentation/main/tabata/tabata_widget.dart';
+import 'package:tabata/presentation/main/workouts/bloc/workouts_bloc.dart';
 import 'package:tabata/presentation/main/workouts/workouts_widget.dart';
 import 'package:tabata/utils/asset_load.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -70,12 +72,17 @@ class _MainWidgetState extends State<MainWidget> {
   Widget _getCurrentBody() {
     GetIt getIt = GetIt.instance;
     TabataBloc tabataBloc = getIt.get<TabataBloc>();
+    WorkoutsBloc workoutsBloc = getIt.get<WorkoutsBloc>();
+    GetTotalTimeUseCase getTotalTimeUseCase = getIt.get<GetTotalTimeUseCase>();
 
     switch (_currentBottomNavigationIndex) {
       case 0:
         return TabataWidget(tabataBloc: tabataBloc);
       case 1:
-        return const WorkoutsWidget();
+        return WorkoutsWidget(
+          workoutsBloc: workoutsBloc,
+          getTotalTimeUseCase: getTotalTimeUseCase,
+        );
     }
 
     return TabataWidget(tabataBloc: tabataBloc);

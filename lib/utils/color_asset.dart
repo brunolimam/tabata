@@ -25,4 +25,5 @@ abstract class ColorAsset {
   static get lightFeedbackColor => const Color(0xFF50A63F);
   static get unselectedIconFeedbackColor => const Color(0xFF5C6570);
   static get borderFeedbackColor => const Color(0xFF707070);
+  static get workoutItemDividerColor => const Color(0xFF2E3338);
 }

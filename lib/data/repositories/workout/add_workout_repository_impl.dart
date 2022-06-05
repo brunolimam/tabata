@@ -33,7 +33,11 @@ class AddWorkoutRepositoryImpl extends AddWorkoutRepository {
       workout.feedback.intensity,
     );
 
-    var workoutModel = WorkoutModel(tabataModel, feedbackModel);
+    var workoutModel = WorkoutModel(
+      tabataModel,
+      feedbackModel,
+      workout.date,
+    );
 
     _service.add(workoutModel, user.id);
   }

@@ -42,5 +42,11 @@
     "how_was_the_workout": "Como foi seu treino?",
     "feed_back_more_details": "Deixe aqui mais detalhes:",
     "type_about_the_workout": "Conte mais sobre seu trein (opcional)",
-    "max_feedback_caracteres": "Máximo: 300 caracteres"
+    "max_feedback_caracteres": "Máximo: 300 caracteres",
+    "exit_feed_title": "Tem certeza que deseja sair?",
+    "exit_feed_subtitle": "Ao sair, o treino não será salvo.",
+    "your_workouts": "Seus treinos",
+    "empty_workouts_title": "Nenhum treino por aqui.",
+    "empty_workouts_subtitle": "Toque em \"Tabata\" e realize um treino.",
+    "repeat_tabata": "Repetir tabata"
 }

@@ -9,11 +9,15 @@ class LoadWorkoutsServiceImpl extends LoadWorkoutsService {
 
   @override
   Future<List<WorkoutModel>> load(String userId) async {
-    var snapShots = await _firestore
+    var snapshots = await _firestore
         .collection('workouts')
         .where('userId', isEqualTo: userId)
         .get();
 
-    return snapShots.docs.map((e) => WorkoutModel.map(e.data())).toList();
+    var documents = snapshots.docs;
+    return documents.map((e) {
+      var data = e.data();
+      return WorkoutModel.map(data);
+    }).toList();
   }
 }

@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tabata/domain/entities/tabata.dart';
+import 'package:tabata/domain/usecases/total_time/get_total_time_use_case.dart';
 import 'package:tabata/domain/usecases/workout/add_workout_use_case.dart';
 import 'package:tabata/presentation/components/bottom_sheets/alert_bottom_sheet.dart';
 import 'package:tabata/presentation/components/tabata/tabata_control_primary_button.dart';
@@ -349,11 +350,13 @@ class _TabataWorkoutWidgetState extends State<TabataWorkoutWidget> {
   Widget _buildFinished(Tabata tabata) {
     Timer timer = Timer(const Duration(seconds: 3), () {
       var addWorkoutUseCase = GetIt.instance.get<AddWorkoutUseCase>();
+      var getTotalTimeUseCase = GetIt.instance.get<GetTotalTimeUseCase>();
       NavigatorUtils.navigate(
         context,
         WorkoutFeedbackWidget(
           tabata: tabata,
           addWorkoutUseCase: addWorkoutUseCase,
+          getTotalTimeUseCase: getTotalTimeUseCase,
         ),
       );
     });

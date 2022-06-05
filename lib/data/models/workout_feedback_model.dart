@@ -1,5 +1,5 @@
-import 'package:tabata/domain/entities/workout_feed_Intensity.dart';
 import 'package:tabata/domain/entities/workout_feedback.dart';
+import 'package:tabata/domain/entities/workout_feedback_intensity.dart';
 
 class WorkoutFeedbackModel extends WorkoutFeedback {
   const WorkoutFeedbackModel(

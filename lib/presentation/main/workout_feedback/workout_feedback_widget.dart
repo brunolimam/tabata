@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tabata/domain/entities/tabata.dart';
 import 'package:tabata/domain/entities/workout.dart';
-import 'package:tabata/domain/entities/workout_feed_Intensity.dart';
 import 'package:tabata/domain/entities/workout_feedback.dart';
+import 'package:tabata/domain/entities/workout_feedback_intensity.dart';
+import 'package:tabata/domain/usecases/total_time/get_total_time_use_case.dart';
 import 'package:tabata/domain/usecases/workout/add_workout_use_case.dart';
+import 'package:tabata/presentation/components/bottom_sheets/alert_bottom_sheet.dart';
 import 'package:tabata/presentation/components/buttons/primary_button.dart';
 import 'package:tabata/presentation/components/workout/workout_item_header.dart';
 import 'package:tabata/presentation/components/workout/workout_item_intensity.dart';
@@ -15,10 +17,12 @@ import 'package:tabata/utils/text_styles.dart';
 class WorkoutFeedbackWidget extends StatefulWidget {
   final Tabata tabata;
   final AddWorkoutUseCase addWorkoutUseCase;
+  final GetTotalTimeUseCase getTotalTimeUseCase;
 
   const WorkoutFeedbackWidget({
     required this.tabata,
     required this.addWorkoutUseCase,
+    required this.getTotalTimeUseCase,
     super.key,
   });
 
@@ -94,19 +98,19 @@ class _WorkoutFeedbackWidgetState extends State<WorkoutFeedbackWidget> {
       WorkoutItemHeader(
         title: 'series'.tr(),
         iconName: 'serie',
-        value: '20',
+        value: widget.tabata.seriesQuantity,
       ),
       const Spacer(),
       WorkoutItemHeader(
         title: 'cycles'.tr(),
         iconName: 'ciclos',
-        value: '20',
+        value: widget.tabata.cycleQuantity,
       ),
       const Spacer(),
       WorkoutItemHeader(
         title: 'total_time'.tr(),
         iconName: 'total',
-        value: '20',
+        value: widget.getTotalTimeUseCase.execute(widget.tabata),
       ),
       const SizedBox(width: 12),
     ]);
@@ -217,7 +221,24 @@ class _WorkoutFeedbackWidgetState extends State<WorkoutFeedbackWidget> {
     );
   }
 
-  _close() {}
+  _close() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return AlertBottomSheet(
+          title: "exit_feed_title".tr(),
+          subtitle: "exit_feed_subtitle".tr(),
+          mainButtonTitle: "leave".tr(),
+          secondaryButtonTitle: "back".tr(),
+          confirmation: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        );
+      },
+    );
+  }
 
   _save() {
     if (_currentItensity == null) return;
@@ -230,6 +251,7 @@ class _WorkoutFeedbackWidgetState extends State<WorkoutFeedbackWidget> {
     var workout = Workout(
       tabata: widget.tabata,
       feedback: feedback,
+      date: DateTime.now(),
     );
 
     widget.addWorkoutUseCase.execute(workout);

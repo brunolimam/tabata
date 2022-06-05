@@ -1,4 +1,4 @@
-import 'package:tabata/domain/entities/workout_feed_Intensity.dart';
+import 'package:tabata/domain/entities/workout_feedback_intensity.dart';
 
 class WorkoutFeedback {
   final String description;

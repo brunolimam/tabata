@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:tabata/domain/entities/workout_feed_Intensity.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:tabata/domain/entities/workout_feedback_intensity.dart';
 import 'package:tabata/presentation/components/gestures/gesture_tap.dart';
 import 'package:tabata/utils/asset_load.dart';
 import 'package:tabata/utils/color_asset.dart';
@@ -11,36 +10,40 @@ class WorkoutItemIntensity extends StatelessWidget {
   final bool isSelected;
   final WorkoutFeedbackIntensity intensity;
   final VoidCallback onPressed;
+  final bool showsTitle;
 
   const WorkoutItemIntensity({
     this.isSelected = false,
     required this.intensity,
     required this.onPressed,
+    this.showsTitle = true,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureTap(
-      onPressed: onPressed,
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-            child: ColoredBox(
-              color: _getColor(),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: SvgPicture.asset(
-                  IconsAsset.named(_getIconName()),
-                  color: _getIconColor(),
-                ),
-              ),
+    List<Widget> content = [
+      ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+        child: ColoredBox(
+          color: _getColor(),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: SvgPicture.asset(
+              IconsAsset.named(_getIconName()),
+              color: _getIconColor(),
             ),
           ),
+        ),
+      ),
+    ];
+
+    if (showsTitle) {
+      content.addAll(
+        [
           const SizedBox(height: 4),
           Text(
-            _getTitle(),
+            intensity.displayName,
             style: TextStyles.titleWithSize(
               size: 14,
               weight: FontWeight.w700,
@@ -48,19 +51,15 @@ class WorkoutItemIntensity extends StatelessWidget {
             ),
           )
         ],
+      );
+    }
+
+    return GestureTap(
+      onPressed: onPressed,
+      child: Column(
+        children: content,
       ),
     );
-  }
-
-  String _getTitle() {
-    switch (intensity) {
-      case WorkoutFeedbackIntensity.light:
-        return "light".tr();
-      case WorkoutFeedbackIntensity.normal:
-        return "moderate".tr();
-      case WorkoutFeedbackIntensity.hard:
-        return "hard".tr();
-    }
   }
 
   Color _getColor() {
