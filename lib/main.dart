@@ -1,9 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:tabata/domain/entities/tabata.dart';
+import 'package:tabata/domain/entities/workout_feedback.dart';
+import 'package:tabata/domain/usecases/workout/add_workout_use_case.dart';
 import 'package:tabata/injector.dart';
 import 'package:tabata/presentation/launch_screen/bloc/launch_screen_bloc.dart';
 import 'package:tabata/presentation/launch_screen/launch_screen_widget.dart';
+import 'package:tabata/presentation/main/workout_feedback/workout_feedback_widget.dart';
 import 'package:tabata/utils/color_asset.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';

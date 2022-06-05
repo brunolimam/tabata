@@ -33,5 +33,14 @@
     "finish_workout": "Finalizar treino",
     "restart_workout_title": "Tem certeza que deseja recomeçar o treino?",
     "restart_workout_subtitle": "Ao recomeçar, o treino em andamento não será salvo.",
-    "restart_workout": "Recomeçar treino"
+    "restart_workout": "Recomeçar treino",
+    "workout_finished": "Treino finalizado!",
+    "save": "Salvar",
+    "light": "Leve",
+    "moderate": "Moderado",
+    "hard": "Intenso",
+    "how_was_the_workout": "Como foi seu treino?",
+    "feed_back_more_details": "Deixe aqui mais detalhes:",
+    "type_about_the_workout": "Conte mais sobre seu trein (opcional)",
+    "max_feedback_caracteres": "Máximo: 300 caracteres"
 }

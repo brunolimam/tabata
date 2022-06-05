@@ -5,6 +5,7 @@ import 'package:tabata/data/repositories/auth/create_anonymous_user_repository_i
 import 'package:tabata/data/repositories/auth/current_user/get_current_user_repository_impl.dart';
 import 'package:tabata/data/repositories/tabata/get_current_tabata_repository_impl.dart';
 import 'package:tabata/data/repositories/tabata/set_current_tabata_repository_impl.dart';
+import 'package:tabata/data/repositories/workout/add_workout_repository_impl.dart';
 import 'package:tabata/data/services/auth/create_anonymous_user_service.dart';
 import 'package:tabata/data/services/auth/create_anonymous_user_service_impl.dart';
 import 'package:tabata/data/services/auth/current_user/get_current_user_service.dart';
@@ -13,7 +14,10 @@ import 'package:tabata/data/services/tabata/get_current_tabata_service.dart';
 import 'package:tabata/data/services/tabata/get_current_tabata_service_impl.dart';
 import 'package:tabata/data/services/tabata/set_current_tabata_service.dart';
 import 'package:tabata/data/services/tabata/set_current_tabata_service_impl.dart';
+import 'package:tabata/data/services/workout/add_workout_service.dart';
+import 'package:tabata/data/services/workout/add_workout_service_impl.dart';
 import 'package:tabata/domain/entities/tabata.dart';
+import 'package:tabata/domain/repositories/add_workout_repository.dart';
 import 'package:tabata/domain/repositories/create_anonymous_user_repository.dart';
 import 'package:tabata/domain/repositories/get_current_tabata_repository.dart';
 import 'package:tabata/domain/repositories/get_current_user_repository.dart';
@@ -36,6 +40,8 @@ import 'package:tabata/domain/usecases/time_to_text/get_text_from_time_use_case.
 import 'package:tabata/domain/usecases/time_to_text/get_text_from_time_use_case_impl.dart';
 import 'package:tabata/domain/usecases/total_time/get_total_time_use_case.dart';
 import 'package:tabata/domain/usecases/total_time/get_total_time_use_case_impl.dart';
+import 'package:tabata/domain/usecases/workout/add_workout_use_case.dart';
+import 'package:tabata/domain/usecases/workout/add_workout_use_case_impl.dart';
 import 'package:tabata/presentation/launch_screen/bloc/launch_screen_bloc.dart';
 import 'package:tabata/presentation/main/tabata/bloc/tabata_bloc.dart';
 import 'package:tabata/presentation/main/tabata_workout/bloc/tabata_workout_bloc.dart';
@@ -49,6 +55,7 @@ Future<void> initializeDependencies() async {
   settingScreenDependencies();
   tabataScreenDependencies();
   tabataWorkoutScreenDependencies();
+  workoutFeedbackScreenDependencies();
 }
 
 Future<void> registerFirebaseSingletons() async {
@@ -120,4 +127,13 @@ Future<void> tabataWorkoutScreenDependencies() async {
       getTotalTimeUseCase: injector(),
     ),
   );
+}
+
+Future<void> workoutFeedbackScreenDependencies() async {
+  injector.registerFactory<AddWorkoutUseCase>(
+      () => AddWorkoutUseCaseImpl(injector()));
+  injector.registerFactory<AddWorkoutRepository>(
+      () => AddWorkoutRepositoryImpl(injector(), injector()));
+  injector.registerFactory<AddWorkoutService>(
+      () => AddWorkoutServiceImpl(injector()));
 }

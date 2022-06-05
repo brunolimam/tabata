@@ -158,7 +158,7 @@ class TabataWorkoutBloc extends Bloc<TabataWorkoutEvent, TabataWorkoutState> {
       if (_currentTabataWorkout.isOnEndOfExercise()) {
         _currentState = TabataWorkoutBlocState.isFinished;
         _currentTimer?.cancel();
-        return emit(TabataWorkoutFinished());
+        return emit(TabataWorkoutFinished(tabata));
       } else if (_currentTabataWorkout.isOnEndOfCycle()) {
         _restartExerciseNumer();
         _incrementCycleNumber();

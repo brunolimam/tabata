@@ -77,4 +77,8 @@ class TabataWorkoutCycleRest extends TabataWorkoutState {
   const TabataWorkoutCycleRest(this.tabataWorkout);
 }
 
-class TabataWorkoutFinished extends TabataWorkoutState {}
+class TabataWorkoutFinished extends TabataWorkoutState {
+  final Tabata tabata;
+
+  const TabataWorkoutFinished(this.tabata);
+}

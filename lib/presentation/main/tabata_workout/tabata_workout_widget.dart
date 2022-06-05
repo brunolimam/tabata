@@ -1,17 +1,23 @@
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tabata/domain/entities/tabata.dart';
+import 'package:tabata/domain/usecases/workout/add_workout_use_case.dart';
 import 'package:tabata/presentation/components/bottom_sheets/alert_bottom_sheet.dart';
 import 'package:tabata/presentation/components/tabata/tabata_control_primary_button.dart';
 import 'package:tabata/presentation/components/tabata/tabata_control_secondary_button.dart';
 import 'package:tabata/presentation/main/tabata_workout/bloc/tabata_workout_bloc.dart';
+import 'package:tabata/presentation/main/workout_feedback/workout_feedback_widget.dart';
 import 'package:tabata/utils/asset_load.dart';
 import 'package:tabata/utils/color_asset.dart';
 import 'package:tabata/utils/dimens.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:tabata/utils/navigator_utils.dart';
 import 'package:tabata/utils/text_styles.dart';
 
 class TabataWorkoutWidget extends StatefulWidget {
@@ -59,7 +65,7 @@ class _TabataWorkoutWidgetState extends State<TabataWorkoutWidget> {
               } else if (state is TabataWorkoutCycleRest) {
                 return _buildCycleRest(state.tabataWorkout);
               } else if (state is TabataWorkoutFinished) {
-                return _buildFinished();
+                return _buildFinished(state.tabata);
               }
 
               return const Text('Something went wrong');
@@ -340,7 +346,18 @@ class _TabataWorkoutWidgetState extends State<TabataWorkoutWidget> {
     ]);
   }
 
-  Widget _buildFinished() {
+  Widget _buildFinished(Tabata tabata) {
+    Timer timer = Timer(const Duration(seconds: 3), () {
+      var addWorkoutUseCase = GetIt.instance.get<AddWorkoutUseCase>();
+      NavigatorUtils.navigate(
+        context,
+        WorkoutFeedbackWidget(
+          tabata: tabata,
+          addWorkoutUseCase: addWorkoutUseCase,
+        ),
+      );
+    });
+
     return Center(
       child: Lottie.asset(AnimationAsset.named("finished_workout")),
     );

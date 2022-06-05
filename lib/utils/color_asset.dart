@@ -19,4 +19,10 @@ abstract class ColorAsset {
   static get tabataItemHeader => const Color(0xFFE3E5E8);
 
   static get restColor => const Color(0xFF6EBA5E);
+
+  static get hardFeedbackTextColor => const Color(0xFFF5A189);
+  static get hardFeedbackColor => const Color(0xFFFF5F33);
+  static get lightFeedbackColor => const Color(0xFF50A63F);
+  static get unselectedIconFeedbackColor => const Color(0xFF5C6570);
+  static get borderFeedbackColor => const Color(0xFF707070);
 }
