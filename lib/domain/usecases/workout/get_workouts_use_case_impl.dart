@@ -9,6 +9,9 @@ class GetWorkoutsUseCaseImpl extends GetWorkoutsUseCase {
 
   @override
   Future<List<Workout>> execute() async {
-    return await _loadWorkoutsRepository.load();
+    var workouts = await _loadWorkoutsRepository.load();
+
+    workouts.sort(((a, b) => b.date.compareTo(a.date)));
+    return workouts;
   }
 }

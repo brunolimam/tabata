@@ -15,11 +15,13 @@ import 'package:tabata/extension/string_casing_extension.dart';
 class WorkoutListItem extends StatelessWidget {
   final Workout workout;
   final VoidCallback onPressed;
+  final VoidCallback onRepeatPressed;
   final String totalTime;
 
   const WorkoutListItem({
     required this.workout,
     required this.onPressed,
+    required this.onRepeatPressed,
     required this.totalTime,
     super.key,
   });
@@ -116,16 +118,29 @@ class WorkoutListItem extends StatelessWidget {
 
   Widget _buildFooter() {
     return Row(children: [
-      SvgPicture.asset(
-        IconsAsset.named('return'),
-        color: ColorAsset.secondaryColor,
-      ),
-      const SizedBox(width: 12),
-      Text(
-        'repeat_tabata'.tr(),
-        style: TextStyles.titleWithSize(
-            size: 16, color: ColorAsset.secondaryColor),
-      ),
+      ElevatedButton(
+          onPressed: onRepeatPressed,
+          style: ElevatedButton.styleFrom(
+            primary: Colors.transparent,
+            onPrimary: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            padding: EdgeInsets.zero,
+          ),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                IconsAsset.named('return'),
+                color: ColorAsset.secondaryColor,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'repeat_tabata'.tr(),
+                style: TextStyles.titleWithSize(
+                    size: 16, color: ColorAsset.secondaryColor),
+              ),
+            ],
+          )),
       const Spacer(),
       Text(
         _dateDisplay(),

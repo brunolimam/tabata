@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_it/get_it.dart';
 import 'package:tabata/domain/entities/workout.dart';
 import 'package:tabata/domain/usecases/total_time/get_total_time_use_case.dart';
 import 'package:tabata/presentation/components/bars/title_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:tabata/presentation/components/loading/loading_state_widget.dart';
 import 'package:tabata/presentation/components/workout/workout_list_item.dart';
+import 'package:tabata/presentation/main/tabata_workout/bloc/tabata_workout_bloc.dart';
+import 'package:tabata/presentation/main/tabata_workout/tabata_workout_widget.dart';
 import 'package:tabata/presentation/main/workouts/bloc/workouts_bloc.dart';
 import 'package:tabata/utils/asset_load.dart';
+import 'package:tabata/utils/navigator_utils.dart';
 import 'package:tabata/utils/text_styles.dart';
 
 class WorkoutsWidget extends StatefulWidget {
@@ -90,6 +94,7 @@ class _WorkoutsWidgetState extends State<WorkoutsWidget> {
             onPressed: () {
               _openWorkout(workout);
             },
+            onRepeatPressed: () => _repeatWorkout(workout),
           ),
         )
         .toList();
@@ -102,4 +107,21 @@ class _WorkoutsWidgetState extends State<WorkoutsWidget> {
   }
 
   _openWorkout(Workout workout) {}
+
+  _repeatWorkout(Workout workout) {
+    var tabataWorkoutBloc =
+        GetIt.instance.get<TabataWorkoutBloc>(param1: workout.tabata);
+    NavigatorUtils.navigate(
+      context,
+      TabataWorkoutWidget(
+        tabata: workout.tabata,
+        tabataWorkoutBloc: tabataWorkoutBloc,
+      ),
+      popCallback: _reloadContent,
+    );
+  }
+
+  _reloadContent() {
+    widget.workoutsBloc.add(const GetWorkoutsEvent());
+  }
 }

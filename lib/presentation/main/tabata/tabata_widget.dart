@@ -157,6 +157,7 @@ class _TabataWidgetState extends State<TabataWidget> {
         getCurrentTabataUseCase: getIt.get<GetCurrentTabataUseCase>(),
         setCurrentTabataUseCase: getIt.get<SetCurrentTabataUseCase>(),
       ),
+      popCallback: _reloadCurrentTabata,
     );
   }
 
@@ -171,5 +172,9 @@ class _TabataWidgetState extends State<TabataWidget> {
         tabataWorkoutBloc: tabataWorkoutBloc,
       ),
     );
+  }
+
+  _reloadCurrentTabata() {
+    widget.tabataBloc.add(GetCurrentTabataEvent());
   }
 }
